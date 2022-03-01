@@ -1,0 +1,14 @@
+1 - In the initialize method declare cordinates
+    of snake , rows/cols arr and so on.
+
+2 - In the update method prepare enviornment for
+    drawing snake game on the screen.This is where
+    position of snake will be updated by moving the 
+    snake's segments.Generate food and add new segments
+    to the snake.
+
+3 - In the draw method take all updated stuff and draw 
+    them on the screen.
+
+4 - Update and draw method should be keep running over 
+    and over again during the game.

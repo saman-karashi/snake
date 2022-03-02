@@ -9,61 +9,101 @@ const properties = {
   rowNum: 16,
   colNum: 21,
   grid: [],
-  velocity: 1,
+  velocity: 1000,
   col__width: 40,
   col__height: 40,
-  food__pos: { x: 0, y: 0 },
-  snake__segments: [],
+  food__pos: { x: 0, y: 0, present: true },
+  direction: undefined,
 };
 
 //Destructure props from props obj
-const {canvas__width, canvas__height , velocity , snake__segments, food__pos, grid, col__width, col__height, rowNum, colNum } =
-properties;
+let {
+  direction,
+  canvas__width,
+  canvas__height,
+  velocity,
+  grid,
+  col__width,
+  col__height,
+  rowNum,
+  colNum,
+} = properties;
+
+let snake = {
+  alive: false,
+  segments: [
+    { x: canvas__width / 2, y: canvas__height / 2 - 20 },
+  ],
+};
+
+ //Set random food spawn
+ let food__pos = {
+     present:false,
+     x:Math.floor(Math.random() * ((canvas__width / col__width)-1)+1)*col__width,
+     y:Math.floor(Math.random()*((canvas__height / col__height)-1)+1) * col__height
+  };
+
+const prevoiusHeadPosX = snake.segments[0].x;
 
 // Initialize
 function initialize() {
-  //Set canvas width and height
   canvas__El.width = canvas__width;
   canvas__El.height = canvas__height;
+  //Set canvas width and height
+
+  update();
+  draw();
 }
 
-
-function moveSnakeBody(e){
-switch (e.key) {
+function moveSnakeBody(e) {
+  switch (e.key) {
     case 'ArrowRight':
-        snake__segments[0].x +=col__width
-        break;
+      if (direction !== 'left') {
+        direction = 'right';
+      }
+      break;
     case 'ArrowLeft':
-        snake__segments[0].x -=col__width
-    default:
-        break;
+      if (direction !== 'right') {
+        direction = 'left';
+      }
+      break;
+    case 'ArrowUp':
+      if (direction !== 'down') {
+        direction = 'up';
+      }
+      break;
+    case 'ArrowDown':
+      if (direction !== 'up') {
+        direction = 'down';
+      }
+      break;
+  }
 }
-
-}
-
 
 //Update
 function update() {
-//Move snake segment
-window.addEventListener('keydown' , moveSnakeBody)
+  //Move snake's segments
+  window.addEventListener('keydown', moveSnakeBody);
+  const head = snake.segments[0];
+  if (direction === 'right') head.x += col__width;
+  if (direction === 'left') head.x -= col__width;
+  if (direction === 'up') head.y -= col__height;
+  if (direction === 'down') head.y += col__height;
 
+//   if (head.x !== prevoiusHeadPosX) {
+//     snake.segments[1].x += col__width;
+//   }
 }
 
 //Snake
 function snakeHandler() {
-  const snakeSegments = [
-    { x: canvas__width / 2, y: canvas__height / 2 - 20},
-    { x: canvas__width / 2 - 40, y: canvas__height / 2 - 20},
-  ];
-  snake__segments.push(...snakeSegments);
-  
-
-  snake__segments.forEach(segment =>{
-  ctx.beginPath()
-  ctx.rect(segment.x , segment.y , col__width , col__height)
-  ctx.fillStyle='green';
-  ctx.fill()
-  })
+  snake.alive = true;
+  snake.segments.forEach(segment => {
+    ctx.beginPath();
+    ctx.rect(segment.x, segment.y, col__width, col__height);
+    ctx.fillStyle = 'green';
+    ctx.fill();
+  });
 }
 
 //Draw cells
@@ -72,11 +112,6 @@ function cellsHandler() {
     grid[row] = [];
     for (let col = 0; col < colNum; col++) {
       grid[row][col] = { x: col__width * col, y: col__height * row };
-      //Set random food spawn
-      const randomX = grid[row][Math.floor(Math.random() * col)];
-      const randomY = grid[Math.floor(Math.random() * row)][col];
-      food__pos.x = randomX.x;
-      food__pos.y = randomY.y;
       //Draw grid lines on canvas
       ctx.beginPath();
       ctx.strokeRect(
@@ -91,21 +126,36 @@ function cellsHandler() {
 
 //Draw food
 function foodHandler() {
-  for(let row = 0 ; row < rowNum ; row++){
-  const checkPositions=grid[row].every((col)=> col.x !== food__pos.x || col.y !== food__pos.y)
-  if(checkPositions){
-    ctx.beginPath();
-    ctx.rect(food__pos.x, food__pos.y, col__width, col__height);
-    ctx.fillStyle = 'red';
-    ctx.fill();
-  }
-}
+     
+        if(food__pos.present){
+            ctx.beginPath();
+            ctx.rect(food__pos.x, food__pos.y, col__width, col__height);
+            ctx.fillStyle = 'red';
+            ctx.fill();
+
+        }
+    
+  
+
+  if(snake.segments[0].x === food__pos.x){
+      return  (
+        food__pos.present = false,
+        food__pos = {
+        present:food__pos.present,
+        x:Math.floor(Math.random() * ((canvas__width / col__width)-1)+1)*col__width,
+        y:Math.floor(Math.random()*((canvas__height / col__height)-1)+1) * col__height
+     }
+      )
+    }
+
+  return food__pos.present=true
 }
 
 //Draw
 function draw() {
+  ctx.clearRect(0, 0, canvas__width, canvas__height);
   //Draw ground onscreen
-  ctx.rect(0, 0,canvas__width,canvas__height);
+  ctx.rect(0, 0, canvas__width, canvas__height);
   ctx.fillStyle = 'lightgreen';
   ctx.fill();
 
@@ -117,8 +167,4 @@ function draw() {
   snakeHandler();
 }
 
-
-initialize();
-update();
-draw();
-
+setInterval(initialize, 500);

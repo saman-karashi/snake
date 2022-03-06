@@ -2,17 +2,17 @@
 padding: 0;
 margin: 0;
 box-sizing: border-box;
+font-family: 'Poppins', Helvetica, sans-serif;
 }
 
 body{
-font-family: 'Poppins', Helvetica, sans-serif;
 background-color: #f4f4f4;
 min-height: 100vh;
-padding: 10vw;
+overflow-x: hidden;
 display: flex;
-flex-flow: column;
-justify-content: center;
 align-items: center;
+justify-content: center;
+flex-direction: column;
 }
 
 .score{
@@ -20,12 +20,72 @@ font-size:2rem;
 margin-bottom: 2rem;
 }
 
-#canvas{
-image-rendering: -moz-crisp-edges;
-image-rendering: -webkit-crisp-edges;
-image-rendering: pixelated;
-image-rendering: crisp-edges;
-position: relative;
+.red{color:red;}
+
+
+.modal{
+max-width: 350px;
+height: 200px;
+width: 100%;
+text-align: center;
+border-radius: 15px;
+position: fixed;
+background-color: #fff;
+overflow: hidden;
+top: -50%;
+transform: translate(-50%,-50%);
+z-index: 1100;
+transition: top 0.5s ease-in-out;
+left: 50%;
 }
 
-.red{color:red;}
+.modal.active{top: 50%;}
+
+.modal .card{
+height: 100%;
+display: flex;
+flex-flow: column;
+align-items: center;
+justify-content: center;
+}
+
+.modal .card > div:first-child{
+margin-bottom: 2rem;
+}
+
+.btn{
+cursor: pointer;
+border: none;
+color: #333;
+background-color:lightgreen;
+padding:.5rem 1rem;
+font-weight: 600;
+font-size: 1rem;
+}
+
+.death__text{
+font-size: 1.5rem;
+font-weight: 800;
+}
+
+.overlay{
+height: 100vh;
+width: 100vw;
+position: fixed;
+background-color: rgba(0, 0, 0, 0.3);
+z-index: 1000;
+top: 0;
+left: 0;
+display:none;
+}
+
+#overlay.active{display: block;}
+
+#canvas{
+image-rendering: crisp-edges;
+image-rendering: pixelated;
+image-rendering: -moz-crisp-edges;
+image-rendering: optimizeQuality;
+
+}
+

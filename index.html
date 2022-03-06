@@ -8,11 +8,23 @@
     <title>Snake</title>
   </head>
   <body>
-    <span class="score">
-      <span>Score:</span>
-      <span class="red">0</span>
-    </span>
-   <canvas id="canvas"></canvas>
+    <div id="overlay" class="overlay"></div>
+    <div class="modal" id="modal">
+      <div class="card">
+        <div class="death__text">Game Over</div>
+        <div>
+          <button class="btn" id="reload__btn">Try again</button>
+        </div>
+      </div>
+    </div>
+   
+      <span class="score">
+        <span>Score:</span>
+        <span class="red">0</span>
+      </span>
+     
+        <canvas id="canvas"></canvas>
+   
     <script src="App.js"></script>
   </body>
 </html>

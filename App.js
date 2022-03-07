@@ -69,7 +69,7 @@ function wallColision(){
 if(snake.segments[0].x > canvas__width - col__width
     || snake.segments[0].x < 0
     || snake.segments[0].y > canvas__height - col__height
-    || snake.segments[0].y < col__height - col__height){
+    || snake.segments[0].y < 0){
 clearInterval(interval)
 overlay__El.classList.add('active')
 modal__El.classList.add('active')
@@ -79,14 +79,14 @@ modal__El.classList.add('active')
 
 
 function snakeColision(){
-if(snake.segments.length > 0){
- const bol=snake.segments.some(segment =>{
-   return(
-    snake.segments[0].x == segment.x,
-    snake.segments[0].y == segment.y
-     )
- })
- console.log(bol);
+
+for(let i =3; i < snake.segments.length ; i++){
+  if(snake.segments[0].x === snake.segments[i].x &&
+    snake.segments[0].y  === snake.segments[i].y){
+      clearInterval(interval)
+      overlay__El.classList.add('active')
+      modal__El.classList.add('active')
+    }
 }
 
 }
@@ -174,6 +174,11 @@ function cellsHandler() {
 //Grow snake
 function snakeGrows(){
 snake.segments.push({x:snake.segments[0].x , y:snake.segments[0].y})
+
+if(snake.segments.length > 50){
+alert('You won a trophy🏆')
+window.location.reload()
+}
 }
 
 //Eat food
@@ -224,6 +229,8 @@ function draw() {
 }
 
 
-setInterval(()=>{
+interval=setInterval(()=>{
   initialize()
 },velocity)
+
+

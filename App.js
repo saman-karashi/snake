@@ -4,7 +4,11 @@ const canvas__El = document.querySelector('#canvas'),
   ctx = canvas__El.getContext('2d'),
   modal__El=document.getElementById('modal'),
   overlay__El=document.getElementById('overlay'),
-  reloadBtn__El=document.getElementById('reload__btn')
+  reloadBtn__El=document.getElementById('reload__btn'),
+  leftPad__El=document.getElementById('left-pad'),
+  rightPad__El=document.getElementById('right-pad'),
+  upPad__El=document.getElementById('up-pad'),
+  downPad__El=document.getElementById('down-pad');
   
 
   //Reload the game
@@ -13,6 +17,8 @@ const canvas__El = document.querySelector('#canvas'),
   })
 
 let interval;
+
+let lastFrame = performance.now()
 
 const properties = {
   canvas__width:800,
@@ -24,8 +30,8 @@ const properties = {
   col__width: 40,
   col__height: 40,
   food__pos: { x: 0, y: 0, present: true },
-  direction: undefined,
-  score:0
+  direction: null,
+  score:0,
 };
 
 //Destructure props from props obj
@@ -55,11 +61,25 @@ let snake = {
      y:Math.floor(Math.random() * ((canvas__height / col__height)-1)+1) * col__height
   };
 
+
+//Event listeners 
+function eventListenersHandler(){
+window.addEventListener('keydown', moveSnake);
+
+leftPad__El.addEventListener('click',leftPadHandler)
+rightPad__El.addEventListener('click',rightPadHandler)
+upPad__El.addEventListener('click',upPadHandler);
+downPad__El.addEventListener('click',downPadHandler)
+}
+
+eventListenersHandler()
+
 // Initialize
 function initialize() {
+  ctx.clearRect(0, 0, canvas__width, canvas__height);
+
  canvas__El.width = canvas__width
  canvas__El.height = canvas__height
-  //Set canvas width and height
 
   update();
   draw();
@@ -79,11 +99,10 @@ modal__El.classList.add('active')
 
 
 function snakeColision(){
-
 for(let i =3; i < snake.segments.length ; i++){
   if(snake.segments[0].x === snake.segments[i].x &&
     snake.segments[0].y  === snake.segments[i].y){
-      clearInterval(interval)
+     clearInterval(interval)
       overlay__El.classList.add('active')
       modal__El.classList.add('active')
     }
@@ -117,15 +136,36 @@ function moveSnake(e) {
 }
 
 
-//Update
+function leftPadHandler(){
+  if (direction !== 'right') {
+    direction = 'left';
+  }
+}
+
+function rightPadHandler(){
+  if (direction !== 'left') {
+    direction = 'right';
+  }
+}
+
+function upPadHandler(){
+  if (direction !== 'down') {
+    direction = 'up';
+  }
+}
+
+function downPadHandler(){
+  if (direction !== 'up') {
+    direction = 'down';
+  }
+}
+
 function update() {
-  //Move snake's segments
-  window.addEventListener('keydown', moveSnake);
   const head = snake.segments[0];
   if (direction === 'right') head.x += col__width;
   if (direction === 'left') head.x -= col__width;
-  if (direction === 'up') head.y -= col__height;
-  if (direction === 'down') head.y += col__height;
+  if (direction === 'up') head.y -= col__width;
+  if (direction === 'down') head.y += col__width;
   //Wall detection
   wallColision();
 
@@ -212,7 +252,6 @@ function randomFoodHandler() {
 
 //Draw
 function draw() {
-  ctx.clearRect(0, 0, canvas__width, canvas__height);
   //Draw ground onscreen
   ctx.rect(0,0,canvas__width,canvas__height);
   ctx.fillStyle = 'lightgreen';
@@ -228,9 +267,6 @@ function draw() {
   snakeHandler();
 }
 
-
 interval=setInterval(()=>{
-  initialize()
+initialize()
 },velocity)
-
-

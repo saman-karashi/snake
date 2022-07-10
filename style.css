@@ -8,7 +8,7 @@ font-family: 'Poppins', Helvetica, sans-serif;
 body{
 background-color: #f4f4f4;
 min-height: 100vh;
-overflow-x: hidden;
+
 display: flex;
 align-items: center;
 justify-content: center;
@@ -86,6 +86,74 @@ image-rendering: crisp-edges;
 image-rendering: pixelated;
 image-rendering: -moz-crisp-edges;
 image-rendering: optimizeQuality;
-
+max-width: 100%;
+object-fit: contain;
 }
 
+
+.pads{
+width:10rem;
+margin: 5rem auto 0;
+min-height:7.5rem;
+display: flex;
+position: relative;
+display: none;
+}
+
+
+.pads .right-pad,
+.pads .left-pad,
+.pads .down-pad,
+.pads .up-pad{
+position: absolute;
+cursor: pointer;
+}
+
+
+.pads .right-pad{
+right: 0;
+top: 0;
+width: 0;
+height: 0;
+border-top: 30px solid transparent;
+border-bottom: 30px solid transparent;
+border-left: 40px solid #000;
+}
+
+.pads .left-pad{
+width: 0;
+height: 0;
+transform: rotate(180deg);
+border-top: 30px solid transparent;
+border-bottom: 30px solid transparent;
+border-left: 40px solid #000;
+}
+
+.pads .down-pad{
+width: 0;
+height: 0;
+bottom: 0;
+left: calc(50% - 20px);
+transform: rotate(90deg);
+border-top: 30px solid transparent;
+border-bottom: 30px solid transparent;
+border-left: 40px solid #000;
+}
+
+
+.pads .up-pad{
+width: 0;
+height: 0;
+transform: rotate(-90deg);
+top:-60px;
+left: calc(50% - 20px);
+border-top: 30px solid transparent;
+border-bottom: 30px solid transparent;
+border-left: 40px solid #000;
+}
+
+@media screen and (max-width:500px) {
+    .pads{
+    display: flex;
+    }
+}
